@@ -22,48 +22,43 @@ export default function Navbar() {
         justifyContent: "space-between",
         alignItems: "center",
         boxSizing: "border-box",
-        background: scrolled
-          ? "rgba(5,5,16,0.85)"
-          : "transparent",
+        background: scrolled ? "rgba(39,26,56,0.85)" : "transparent",
         backdropFilter: scrolled ? "blur(14px)" : "none",
         borderBottom: scrolled
-          ? "1px solid rgba(139,92,246,0.15)"
+          ? "1px solid rgba(118,219,219,0.2)"
           : "none",
         transition: "all 0.4s ease",
+        fontFamily: "var(--font-manrope), sans-serif",
       }}
     >
-      {/* Logo */}
       <span
         style={{
-          fontSize: "20px",
+          fontSize: "22px",
           fontWeight: 800,
           letterSpacing: "1px",
-          background: "linear-gradient(90deg, #8b5cf6, #06b6d4)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
+          color: "#f75082",
           cursor: "pointer",
         }}
       >
         FBN.dev
       </span>
 
-      {/* Nav Links */}
       <div style={{ display: "flex", gap: "36px" }}>
-        {["home", "about", "skills", "projects", "contact"].map((item) => (
+        {["intro", "about", "skills", "projects", "contact"].map((item) => (
           <a
             key={item}
             href={`#${item}`}
             style={{
-              color: "#94a3b8",
+              color: "#76dbdb",
               textDecoration: "none",
-              fontSize: "13px",
+              fontSize: "14px",
               textTransform: "capitalize",
               letterSpacing: "1.5px",
               fontWeight: 500,
               transition: "color 0.3s",
             }}
-            onMouseOver={(e) => (e.target.style.color = "#8b5cf6")}
-            onMouseOut={(e) => (e.target.style.color = "#94a3b8")}
+            onMouseOver={(e) => (e.target.style.color = "#f75082")}
+            onMouseOut={(e) => (e.target.style.color = "#76dbdb")}
           >
             {item}
           </a>

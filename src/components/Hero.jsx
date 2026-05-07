@@ -1,62 +1,59 @@
 "use client";
 import { TypeAnimation } from "react-type-animation";
+import ColorBends from "./ColorBends";
 
 export default function Hero() {
   return (
     <section
-      id="home"
+      id="intro"
       style={{
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
         padding: "0 80px",
-        background: "#05050f",
+        background: "#271a38",
         position: "relative",
         overflow: "hidden",
         boxSizing: "border-box",
+        fontFamily: "var(--font-manrope), sans-serif",
       }}
     >
-      {/* Grid Background */}
+      {/* ColorBends Animation Background */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          backgroundImage: `
-            linear-gradient(rgba(139,92,246,0.07) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(139,92,246,0.07) 1px, transparent 1px)
-          `,
-          backgroundSize: "50px 50px",
-          pointerEvents: "none",
+          zIndex: 0,
+          opacity: 0.55,
         }}
-      />
+      >
+        <ColorBends
+          colors={["#271a38", "#76dbdb", "#f75082"]}
+          rotation={90}
+          speed={0.2}
+          scale={1}
+          frequency={1}
+          warpStrength={1}
+          mouseInfluence={1}
+          noise={0.15}
+          parallax={0.5}
+          iterations={1}
+          intensity={0.8}
+          bandWidth={6}
+          transparent
+          autoRotate={0}
+        />
+      </div>
 
-      {/* Glow Top Left */}
+      {/* Dark Overlay for readability */}
       <div
         style={{
           position: "absolute",
-          width: "500px",
-          height: "500px",
+          inset: 0,
           background:
-            "radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)",
-          top: "-100px",
-          left: "-100px",
+            "linear-gradient(135deg, rgba(39,26,56,0.65) 0%, rgba(39,26,56,0.45) 100%)",
+          zIndex: 1,
           pointerEvents: "none",
-          filter: "blur(40px)",
-        }}
-      />
-
-      {/* Glow Bottom Right */}
-      <div
-        style={{
-          position: "absolute",
-          width: "400px",
-          height: "400px",
-          background:
-            "radial-gradient(circle, rgba(6,182,212,0.10) 0%, transparent 70%)",
-          bottom: "-80px",
-          right: "-80px",
-          pointerEvents: "none",
-          filter: "blur(40px)",
         }}
       />
 
@@ -71,13 +68,12 @@ export default function Hero() {
           margin: "0 auto",
           gap: "60px",
           position: "relative",
-          zIndex: 1,
+          zIndex: 2,
         }}
       >
-        {/* LEFT — Text */}
+        {/* LEFT */}
         <div style={{ flex: 1 }}>
-
-          {/* Available Badge */}
+          {/* Badge */}
           <div
             style={{
               display: "inline-flex",
@@ -85,8 +81,8 @@ export default function Hero() {
               gap: "8px",
               padding: "6px 16px",
               borderRadius: "50px",
-              border: "1px solid rgba(139,92,246,0.3)",
-              background: "rgba(139,92,246,0.08)",
+              border: "1px solid rgba(247,80,130,0.5)",
+              background: "rgba(247,80,130,0.12)",
               marginBottom: "24px",
             }}
           >
@@ -95,17 +91,17 @@ export default function Hero() {
                 width: "8px",
                 height: "8px",
                 borderRadius: "50%",
-                background: "#06b6d4",
-                display: "inline-block",
+                background: "#f75082",
                 animation: "pulse 2s infinite",
               }}
             />
             <span
               style={{
                 fontSize: "12px",
-                color: "#06b6d4",
+                color: "#f75082",
                 letterSpacing: "2px",
                 textTransform: "uppercase",
+                fontWeight: 700,
               }}
             >
               Available for work
@@ -115,34 +111,27 @@ export default function Hero() {
           {/* Name */}
           <h1
             style={{
-              fontSize: "clamp(36px, 5vw, 68px)",
-              fontWeight: 800,
+              fontSize: "clamp(48px, 6vw, 80px)",
+              fontWeight: 400,
               lineHeight: 1.1,
-              margin: "0 0 8px 0",
-              color: "#f1f5f9",
-              letterSpacing: "-1px",
+              margin: "0 0 16px 0",
+              color: "#76dbdb",
+              letterSpacing: "2px",
+              fontFamily: "var(--font-bitcount), monospace",
             }}
           >
-            Hi, I'm{" "}
-            <span
-              style={{
-                background: "linear-gradient(135deg, #8b5cf6, #06b6d4)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              Felina
-            </span>
+            Hi, I'm Felina
           </h1>
 
-          {/* Typing Animation */}
+          {/* Typing */}
           <div
             style={{
-              fontSize: "clamp(18px, 2.5vw, 28px)",
+              fontSize: "clamp(20px, 2.5vw, 28px)",
               fontWeight: 600,
-              color: "#8b5cf6",
+              color: "#f75082",
               marginBottom: "24px",
               minHeight: "40px",
+              letterSpacing: "0.5px",
             }}
           >
             <TypeAnimation
@@ -151,7 +140,7 @@ export default function Hero() {
                 2000,
                 "Building Scalable Web Apps...",
                 2000,
-                "Crafting Clean UI/UX...",
+                "Using Next.js",
                 2000,
                 "Turning Ideas Into Reality...",
                 2000,
@@ -166,16 +155,25 @@ export default function Hero() {
           <p
             style={{
               fontSize: "15px",
-              color: "#64748b",
+              color: "rgba(118,219,219,0.8)",
               lineHeight: 1.9,
               maxWidth: "500px",
               marginBottom: "40px",
             }}
           >
             I Build scalable web experiences with a focus on{" "}
-            <span style={{ color: "#94a3b8" }}>performance</span>,{" "}
-            <span style={{ color: "#94a3b8" }}>usability</span>, and{" "}
-            <span style={{ color: "#94a3b8" }}>modern design</span>.
+            <span style={{ color: "#76dbdb", fontWeight: 700 }}>
+              performance
+            </span>
+            ,{" "}
+            <span style={{ color: "#76dbdb", fontWeight: 700 }}>
+              usability
+            </span>
+            , and{" "}
+            <span style={{ color: "#76dbdb", fontWeight: 700 }}>
+              modern design
+            </span>
+            .
           </p>
 
           {/* Buttons */}
@@ -184,18 +182,17 @@ export default function Hero() {
               href="#projects"
               style={{
                 padding: "14px 32px",
-                background: "linear-gradient(135deg, #8b5cf6, #06b6d4)",
-                color: "#fff",
+                background: "#f75082",
+                color: "#271a38",
                 borderRadius: "10px",
                 textDecoration: "none",
-                fontWeight: 600,
+                fontWeight: 700,
                 fontSize: "14px",
                 letterSpacing: "0.5px",
-                transition: "opacity 0.3s, transform 0.3s",
-                display: "inline-block",
+                transition: "all 0.3s",
               }}
               onMouseOver={(e) => {
-                e.target.style.opacity = "0.88";
+                e.target.style.opacity = "0.85";
                 e.target.style.transform = "translateY(-2px)";
               }}
               onMouseOut={(e) => {
@@ -211,22 +208,23 @@ export default function Hero() {
               style={{
                 padding: "14px 32px",
                 background: "transparent",
-                color: "#e2e8f0",
+                color: "#76dbdb",
                 borderRadius: "10px",
                 textDecoration: "none",
-                fontWeight: 600,
+                fontWeight: 700,
                 fontSize: "14px",
                 letterSpacing: "0.5px",
-                border: "1px solid rgba(139,92,246,0.35)",
-                transition: "border 0.3s, transform 0.3s",
-                display: "inline-block",
+                border: "1px solid #76dbdb",
+                transition: "all 0.3s",
               }}
               onMouseOver={(e) => {
-                e.target.style.borderColor = "#8b5cf6";
+                e.target.style.background = "#76dbdb";
+                e.target.style.color = "#271a38";
                 e.target.style.transform = "translateY(-2px)";
               }}
               onMouseOut={(e) => {
-                e.target.style.borderColor = "rgba(139,92,246,0.35)";
+                e.target.style.background = "transparent";
+                e.target.style.color = "#76dbdb";
                 e.target.style.transform = "translateY(0)";
               }}
             >
@@ -234,7 +232,7 @@ export default function Hero() {
             </a>
           </div>
 
-          {/* Social Links */}
+          {/* Social */}
           <div
             style={{
               display: "flex",
@@ -243,14 +241,20 @@ export default function Hero() {
               alignItems: "center",
             }}
           >
-            <span style={{ color: "#334155", fontSize: "12px" }}>
+            <span
+              style={{
+                color: "rgba(118,219,219,0.5)",
+                fontSize: "12px",
+                letterSpacing: "1px",
+              }}
+            >
               FIND ME ON
             </span>
             <div
               style={{
                 height: "1px",
                 width: "30px",
-                background: "rgba(139,92,246,0.3)",
+                background: "rgba(118,219,219,0.4)",
               }}
             />
             {["GitHub", "LinkedIn"].map((s) => (
@@ -258,14 +262,17 @@ export default function Hero() {
                 key={s}
                 href="#"
                 style={{
-                  color: "#475569",
+                  color: "rgba(118,219,219,0.7)",
                   fontSize: "12px",
                   textDecoration: "none",
                   letterSpacing: "1px",
                   transition: "color 0.3s",
+                  fontWeight: 600,
                 }}
-                onMouseOver={(e) => (e.target.style.color = "#8b5cf6")}
-                onMouseOut={(e) => (e.target.style.color = "#475569")}
+                onMouseOver={(e) => (e.target.style.color = "#f75082")}
+                onMouseOut={(e) =>
+                  (e.target.style.color = "rgba(118,219,219,0.7)")
+                }
               >
                 {s}
               </a>
@@ -273,7 +280,7 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* RIGHT — FBN Glowing Circle */}
+        {/* RIGHT — Photo Circle */}
         <div
           style={{
             flex: "0 0 380px",
@@ -283,103 +290,93 @@ export default function Hero() {
             position: "relative",
           }}
         >
-          {/* Outer Ring */}
           <div
             style={{
-              width: "340px",
-              height: "340px",
+              width: "360px",
+              height: "360px",
               borderRadius: "50%",
-              background:
-                "linear-gradient(135deg, rgba(139,92,246,0.25), rgba(6,182,212,0.15))",
+              position: "relative",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              position: "relative",
-              border: "1px solid rgba(139,92,246,0.2)",
               boxShadow:
-                "0 0 60px rgba(139,92,246,0.15), 0 0 120px rgba(6,182,212,0.08)",
+                "0 0 80px rgba(247,80,130,0.4), 0 0 160px rgba(118,219,219,0.15)",
+              border: "1px solid rgba(247,80,130,0.5)",
+              background:
+                "linear-gradient(135deg, rgba(247,80,130,0.2), rgba(118,219,219,0.1))",
             }}
           >
-            {/* Inner Circle */}
             <div
               style={{
-                width: "280px",
-                height: "280px",
+                width: "300px",
+                height: "300px",
                 borderRadius: "50%",
-                background: "rgba(5,5,16,0.8)",
-                border: "1px solid rgba(6,182,212,0.2)",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "4px",
+                overflow: "hidden",
+                border: "1px solid rgba(118,219,219,0.2)",
+                position: "relative",
+                background:
+                  "linear-gradient(135deg, #3a2659 0%, #271a38 50%, #1a0f28 100%)",
               }}
             >
-              {/* FBN Initials */}
-              <span
+              <div
                 style={{
-                  fontSize: "72px",
-                  fontWeight: 800,
-                  lineHeight: 1,
-                  background: "linear-gradient(135deg, #8b5cf6, #06b6d4)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  letterSpacing: "-2px",
+                  position: "absolute",
+                  width: "200px",
+                  height: "200px",
+                  borderRadius: "50%",
+                  background:
+                    "radial-gradient(circle, rgba(247,80,130,0.4) 0%, transparent 70%)",
+                  top: "-40px",
+                  left: "-40px",
+                  filter: "blur(30px)",
                 }}
-              >
-                FBN
-              </span>
-              <span
+              />
+              <div
                 style={{
-                  fontSize: "14px",
-                  color: "#475569",
-                  letterSpacing: "3px",
+                  position: "absolute",
+                  width: "200px",
+                  height: "200px",
+                  borderRadius: "50%",
+                  background:
+                    "radial-gradient(circle, rgba(118,219,219,0.25) 0%, transparent 70%)",
+                  bottom: "-40px",
+                  right: "-40px",
+                  filter: "blur(30px)",
                 }}
-              >
-                .dev
-              </span>
-            </div>
-
-            {/* Badge Top Right */}
-            <div
-              style={{
-                position: "absolute",
-                top: "20px",
-                right: "10px",
-                background: "rgba(139,92,246,0.15)",
-                border: "1px solid rgba(139,92,246,0.3)",
-                borderRadius: "10px",
-                padding: "8px 14px",
-                fontSize: "12px",
-                color: "#c4b5fd",
-                backdropFilter: "blur(10px)",
-              }}
-            >
-              ⚡ PERN Stack
-            </div>
-
-            {/* Badge Bottom Left */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: "30px",
-                left: "0px",
-                background: "rgba(6,182,212,0.12)",
-                border: "1px solid rgba(6,182,212,0.25)",
-                borderRadius: "10px",
-                padding: "8px 14px",
-                fontSize: "12px",
-                color: "#67e8f9",
-                backdropFilter: "blur(10px)",
-              }}
-            >
-              🚀 Open to Work
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  width: "150px",
+                  height: "150px",
+                  borderRadius: "50%",
+                  background:
+                    "radial-gradient(circle, rgba(247,80,130,0.25) 0%, rgba(118,219,219,0.15) 50%, transparent 70%)",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  filter: "blur(20px)",
+                }}
+              />
+              {/*
+                TO ADD YOUR PHOTO LATER:
+                <img
+                  src="/assets/your-photo.png"
+                  alt="Felina"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    position: "relative",
+                    zIndex: 1,
+                  }}
+                />
+              */}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Pulse Keyframe */}
       <style>{`
         @keyframes pulse {
           0%, 100% { opacity: 1; }
