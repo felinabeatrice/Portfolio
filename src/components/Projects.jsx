@@ -1,7 +1,14 @@
 "use client";
-import { useRef } from "react";
+import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import projects from "@/data/projects";
+
+// Slight gradient variations per card (same colors, different angle/stops)
+const cardGradients = [
+  "linear-gradient(135deg, #604285 0%, #f75082 100%)",
+  "linear-gradient(225deg, #f75082 0%, #604285 100%)",
+  "linear-gradient(315deg, #604285 0%, #f75082 60%, #604285 100%)",
+];
 
 export default function Projects() {
   return (
@@ -15,9 +22,9 @@ export default function Projects() {
         overflow: "hidden",
         boxSizing: "border-box",
         fontFamily: "var(--font-manrope), sans-serif",
+        scrollMarginTop: "80px",
       }}
     >
-      {/* Background Glow */}
       <div
         style={{
           position: "absolute",
@@ -91,8 +98,7 @@ export default function Projects() {
             lineHeight: 1.8,
           }}
         >
-          A collection of projects where I turned ideas into functional,
-          scalable, and modern web experiences.
+          Hover a project to reveal the details.
         </p>
 
         {/* Cards Grid */}
@@ -104,7 +110,11 @@ export default function Projects() {
           }}
         >
           {projects.map((project, i) => (
-            <ProjectCard key={i} project={project} />
+            <ProjectCard
+              key={i}
+              project={project}
+              gradient={cardGradients[i % cardGradients.length]}
+            />
           ))}
         </div>
       </div>
@@ -112,141 +122,152 @@ export default function Projects() {
   );
 }
 
-/* ───────────── ProjectCard ───────────── */
+/* ─────────── ProjectCard ─────────── */
 
-function ProjectCard({ project }) {
-  const cardRef = useRef(null);
-  const arrowRef = useRef(null);
-  const spotlightRef = useRef(null);
-
-  const handleMouseMove = (e) => {
-    const card = cardRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    card.style.setProperty("--mouse-x", `${x}%`);
-    card.style.setProperty("--mouse-y", `${y}%`);
-  };
-
-  const handleClick = () => {
-    alert("🚧 This project is coming soon!");
-  };
+function ProjectCard({ project, gradient }) {
+  const [hovered, setHovered] = useState(false);
 
   return (
     <div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onClick={handleClick}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-6px)";
-        e.currentTarget.style.borderColor = "#f75082";
-        e.currentTarget.style.boxShadow =
-          "0 12px 40px rgba(247,80,130,0.25), 0 0 60px rgba(247,80,130,0.15)";
-        if (arrowRef.current) {
-          arrowRef.current.style.opacity = "1";
-          arrowRef.current.style.transform =
-            "translate(0, 0) rotate(0deg)";
-          arrowRef.current.style.background = "#f75082";
-          arrowRef.current.style.color = "#271a38";
-        }
-        if (spotlightRef.current) {
-          spotlightRef.current.style.opacity = "1";
-        }
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.borderColor = "rgba(118,219,219,0.18)";
-        e.currentTarget.style.boxShadow = "none";
-        if (arrowRef.current) {
-          arrowRef.current.style.opacity = "0";
-          arrowRef.current.style.transform =
-            "translate(8px, -8px) rotate(-15deg)";
-          arrowRef.current.style.background = "rgba(247,80,130,0.15)";
-          arrowRef.current.style.color = "#f75082";
-        }
-        if (spotlightRef.current) {
-          spotlightRef.current.style.opacity = "0";
-        }
-      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
         position: "relative",
-        padding: "28px",
         borderRadius: "20px",
-        background:
-          "linear-gradient(135deg, rgba(118,219,219,0.04), rgba(247,80,130,0.04))",
-        border: "1px solid rgba(118,219,219,0.18)",
         overflow: "hidden",
-        transition:
-          "transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
         cursor: "pointer",
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "320px",
+        height: "340px",
+        border: hovered
+          ? "1px solid #f75082"
+          : "1px solid rgba(118,219,219,0.18)",
+        transition: "all 0.4s ease",
+        transform: hovered ? "translateY(-6px)" : "translateY(0)",
+        boxShadow: hovered
+          ? "0 16px 40px rgba(247,80,130,0.3), 0 0 80px rgba(247,80,130,0.15)"
+          : "none",
       }}
     >
-      {/* Cursor-following Spotlight Glow */}
+      {/* Gradient Image */}
       <div
-        ref={spotlightRef}
         style={{
           position: "absolute",
           inset: 0,
+          background: gradient,
+          transform: hovered ? "scale(1.06)" : "scale(1)",
+          transition: "transform 0.5s ease",
+          zIndex: 0,
+        }}
+      />
+
+      {/* Decorative shape inside gradient */}
+      <div
+        style={{
+          position: "absolute",
+          width: "200px",
+          height: "200px",
+          borderRadius: "50%",
           background:
-            "radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(247,80,130,0.18), transparent 60%)",
-          opacity: 0,
-          transition: "opacity 0.3s ease",
-          pointerEvents: "none",
+            "radial-gradient(circle, rgba(255,255,255,0.15), transparent 70%)",
+          top: "-50px",
+          right: "-50px",
+          filter: "blur(20px)",
           zIndex: 1,
         }}
       />
 
-      {/* Top Right Arrow Icon */}
+      {/* Faint Default Title (Bottom) */}
       <div
-        ref={arrowRef}
         style={{
           position: "absolute",
-          top: "20px",
-          right: "20px",
-          width: "38px",
-          height: "38px",
-          borderRadius: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "rgba(247,80,130,0.15)",
-          border: "1px solid rgba(247,80,130,0.4)",
-          color: "#f75082",
-          opacity: 0,
-          transform: "translate(8px, -8px) rotate(-15deg)",
-          transition: "all 0.35s ease",
-          zIndex: 3,
-          pointerEvents: "none",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: "20px 24px",
+          background:
+            "linear-gradient(180deg, transparent 0%, rgba(39,26,56,0.7) 100%)",
+          opacity: hovered ? 0 : 1,
+          transition: "opacity 0.3s ease",
+          zIndex: 2,
         }}
       >
-        <ArrowUpRight size={18} strokeWidth={2.5} />
+        <h3
+          style={{
+            margin: 0,
+            fontSize: "18px",
+            fontWeight: 700,
+            color: "#ffffff",
+            letterSpacing: "0.5px",
+            textShadow: "0 2px 8px rgba(0,0,0,0.4)",
+          }}
+        >
+          {project.title}
+        </h3>
+        <p
+          style={{
+            margin: "4px 0 0 0",
+            color: "rgba(255,255,255,0.7)",
+            fontSize: "12px",
+            letterSpacing: "1px",
+          }}
+        >
+          {project.year}
+        </p>
       </div>
 
-      {/* Content */}
+      {/* Hover Overlay (Glass Reveal) */}
       <div
         style={{
-          position: "relative",
-          zIndex: 2,
-          flex: 1,
+          position: "absolute",
+          inset: 0,
+          padding: "28px",
           display: "flex",
           flexDirection: "column",
+          justifyContent: "flex-end",
+          background:
+            "linear-gradient(180deg, rgba(39,26,56,0.4) 0%, rgba(39,26,56,0.95) 100%)",
+          backdropFilter: "blur(8px)",
+          opacity: hovered ? 1 : 0,
+          transition: "opacity 0.4s ease",
+          zIndex: 3,
         }}
       >
+        {/* Top Right Arrow */}
+        <div
+          style={{
+            position: "absolute",
+            top: "20px",
+            right: "20px",
+            width: "38px",
+            height: "38px",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "#f75082",
+            color: "#271a38",
+            opacity: hovered ? 1 : 0,
+            transform: hovered
+              ? "translate(0,0) rotate(0deg)"
+              : "translate(8px,-8px) rotate(-15deg)",
+            transition: "all 0.4s ease 0.1s",
+          }}
+        >
+          <ArrowUpRight size={18} strokeWidth={2.5} />
+        </div>
+
         {/* Year Badge */}
         <div
           style={{
             display: "inline-flex",
-            alignItems: "center",
             alignSelf: "flex-start",
             padding: "4px 12px",
             borderRadius: "50px",
-            background: "rgba(247,80,130,0.12)",
-            border: "1px solid rgba(247,80,130,0.4)",
-            marginBottom: "20px",
+            background: "rgba(247,80,130,0.18)",
+            border: "1px solid rgba(247,80,130,0.5)",
+            marginBottom: "14px",
+            opacity: hovered ? 1 : 0,
+            transform: hovered ? "translateY(0)" : "translateY(10px)",
+            transition: "all 0.4s ease 0.1s",
           }}
         >
           <span
@@ -264,13 +285,14 @@ function ProjectCard({ project }) {
         {/* Title */}
         <h3
           style={{
-            margin: "0 0 12px 0",
+            margin: "0 0 10px 0",
             fontSize: "22px",
             fontWeight: 700,
             color: "#76dbdb",
             letterSpacing: "0.5px",
-            lineHeight: 1.3,
-            paddingRight: "50px", // space for arrow
+            opacity: hovered ? 1 : 0,
+            transform: hovered ? "translateY(0)" : "translateY(15px)",
+            transition: "all 0.4s ease 0.15s",
           }}
         >
           {project.title}
@@ -279,11 +301,13 @@ function ProjectCard({ project }) {
         {/* Description */}
         <p
           style={{
-            margin: "0 0 24px 0",
-            color: "rgba(118,219,219,0.7)",
-            fontSize: "14px",
-            lineHeight: 1.7,
-            flex: 1,
+            margin: "0 0 18px 0",
+            color: "rgba(118,219,219,0.85)",
+            fontSize: "13px",
+            lineHeight: 1.6,
+            opacity: hovered ? 1 : 0,
+            transform: hovered ? "translateY(0)" : "translateY(20px)",
+            transition: "all 0.4s ease 0.2s",
           }}
         >
           {project.description}
@@ -294,8 +318,10 @@ function ProjectCard({ project }) {
           style={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "8px",
-            marginTop: "auto",
+            gap: "6px",
+            opacity: hovered ? 1 : 0,
+            transform: hovered ? "translateY(0)" : "translateY(25px)",
+            transition: "all 0.4s ease 0.25s",
           }}
         >
           {project.tech.map(({ name, icon: Icon, color }) => (
@@ -305,18 +331,17 @@ function ProjectCard({ project }) {
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: "6px",
-                padding: "6px 12px",
+                gap: "5px",
+                padding: "4px 10px",
                 borderRadius: "50px",
-                fontSize: "12px",
+                fontSize: "11px",
                 fontWeight: 600,
                 color: "#76dbdb",
-                background: "rgba(118,219,219,0.05)",
-                border: "1px solid rgba(118,219,219,0.2)",
-                letterSpacing: "0.3px",
+                background: "rgba(118,219,219,0.08)",
+                border: "1px solid rgba(118,219,219,0.25)",
               }}
             >
-              <Icon size={14} color={color} />
+              <Icon size={12} color={color} />
               {name}
             </span>
           ))}

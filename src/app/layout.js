@@ -13,7 +13,7 @@ const bitcount = Bitcount_Single({
 });
 
 export const metadata = {
-  title: "FBN.dev | Felina Beatrice",
+  title: "FB | Felina Beatrice",
   description: "PERN Stack Developer Portfolio",
 };
 

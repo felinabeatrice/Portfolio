@@ -1,7 +1,11 @@
 "use client";
+import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import skills from "@/data/skills";
 
 export default function Skills() {
+  const [hoveredCategory, setHoveredCategory] = useState(null);
+
   return (
     <section
       id="skills"
@@ -15,6 +19,7 @@ export default function Skills() {
         overflow: "hidden",
         boxSizing: "border-box",
         fontFamily: "var(--font-manrope), sans-serif",
+        scrollMarginTop: "80px",
       }}
     >
       <div
@@ -74,131 +79,156 @@ export default function Skills() {
             color: "rgba(118,219,219,0.6)",
             fontSize: "15px",
             marginBottom: "60px",
-            maxWidth: "500px",
+            maxWidth: "550px",
             lineHeight: 1.8,
           }}
         >
-          Technologies and tools I work with to build modern, scalable web
-          applications.
+          Hover any category to reveal the technologies I use.
         </p>
 
-        {/* Vertical Stack */}
+        {/* Category Pills Row */}
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
-            gap: "24px",
+            gap: "16px",
+            flexWrap: "wrap",
+            position: "relative",
           }}
+          onMouseLeave={() => setHoveredCategory(null)}
         >
-          {skills.map(({ category, icon: CategoryIcon, items }) => (
-            <div
-              key={category}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "220px 1fr",
-                gap: "32px",
-                alignItems: "center",
-                padding: "24px 28px",
-                borderRadius: "16px",
-                background: "rgba(118,219,219,0.04)",
-                border: "1px solid rgba(118,219,219,0.18)",
-                transition: "all 0.3s",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.borderColor = "#f75082";
-                e.currentTarget.style.transform = "translateX(6px)";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.borderColor =
-                  "rgba(118,219,219,0.18)";
-                e.currentTarget.style.transform = "translateX(0)";
-              }}
-            >
-              {/* Category Side */}
+          {skills.map(({ category, icon: CategoryIcon, items }) => {
+            const isActive = hoveredCategory === category;
+
+            return (
               <div
+                key={category}
+                onMouseEnter={() => setHoveredCategory(category)}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "14px",
-                  borderRight: "1px solid rgba(118,219,219,0.15)",
-                  paddingRight: "20px",
+                  position: "relative",
+                  cursor: "pointer",
                 }}
               >
+                {/* Pill */}
                 <div
                   style={{
-                    width: "44px",
-                    height: "44px",
-                    borderRadius: "12px",
-                    background: "rgba(247,80,130,0.15)",
-                    border: "1px solid rgba(247,80,130,0.4)",
-                    display: "flex",
+                    display: "inline-flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                  }}
-                >
-                  <CategoryIcon size={22} color="#f75082" />
-                </div>
-                <h3
-                  style={{
-                    margin: 0,
-                    fontSize: "18px",
+                    gap: "10px",
+                    padding: "14px 24px",
+                    borderRadius: "50px",
+                    background: isActive
+                      ? "#f75082"
+                      : "rgba(118,219,219,0.05)",
+                    border: isActive
+                      ? "1px solid #f75082"
+                      : "1px solid rgba(118,219,219,0.25)",
+                    transition: "all 0.3s ease",
+                    color: isActive ? "#271a38" : "#76dbdb",
                     fontWeight: 700,
-                    color: "#76dbdb",
+                    fontSize: "15px",
                     letterSpacing: "0.5px",
+                    boxShadow: isActive
+                      ? "0 8px 30px rgba(247,80,130,0.4)"
+                      : "none",
                   }}
                 >
+                  <CategoryIcon
+                    size={20}
+                    color={isActive ? "#271a38" : "#f75082"}
+                  />
                   {category}
-                </h3>
-              </div>
+                </div>
 
-              {/* Tech Tags Side */}
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "10px",
-                }}
-              >
-                {items.map(({ name, icon: TechIcon, color }) => (
-                  <span
-                    key={name}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "8px",
-                      padding: "8px 16px",
-                      borderRadius: "50px",
-                      fontSize: "13px",
-                      fontWeight: 600,
-                      color: "#76dbdb",
-                      background: "rgba(118,219,219,0.06)",
-                      border: "1px solid rgba(118,219,219,0.25)",
-                      letterSpacing: "0.3px",
-                      transition: "all 0.3s",
-                      cursor: "default",
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.background = "#f75082";
-                      e.currentTarget.style.color = "#271a38";
-                      e.currentTarget.style.borderColor = "#f75082";
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.background =
-                        "rgba(118,219,219,0.06)";
-                      e.currentTarget.style.color = "#76dbdb";
-                      e.currentTarget.style.borderColor =
-                        "rgba(118,219,219,0.25)";
-                    }}
-                  >
-                    <TechIcon size={16} color={color} />
-                    {name}
-                  </span>
-                ))}
+                {/* Floating Dropdown */}
+                <AnimatePresence>
+                  {isActive && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{
+                        duration: 0.25,
+                        ease: "easeOut",
+                      }}
+                      style={{
+                        position: "absolute",
+                        top: "calc(100% + 14px)",
+                        left: 0,
+                        minWidth: "260px",
+                        padding: "20px",
+                        borderRadius: "16px",
+                        background: "rgba(39,26,56,0.95)",
+                        backdropFilter: "blur(14px)",
+                        border: "1px solid rgba(247,80,130,0.4)",
+                        boxShadow:
+                          "0 12px 40px rgba(247,80,130,0.25), 0 0 60px rgba(247,80,130,0.15)",
+                        zIndex: 100,
+                      }}
+                    >
+                      {/* Arrow pointing up */}
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "-7px",
+                          left: "30px",
+                          width: "12px",
+                          height: "12px",
+                          background: "rgba(39,26,56,0.95)",
+                          borderTop: "1px solid rgba(247,80,130,0.4)",
+                          borderLeft: "1px solid rgba(247,80,130,0.4)",
+                          transform: "rotate(45deg)",
+                        }}
+                      />
+
+                      <div
+                        style={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: "8px",
+                        }}
+                      >
+                        {items.map(({ name, icon: TechIcon, color }) => (
+                          <span
+                            key={name}
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "6px",
+                              padding: "6px 12px",
+                              borderRadius: "50px",
+                              fontSize: "12px",
+                              fontWeight: 600,
+                              color: "#76dbdb",
+                              background: "rgba(118,219,219,0.06)",
+                              border:
+                                "1px solid rgba(118,219,219,0.25)",
+                              letterSpacing: "0.3px",
+                            }}
+                          >
+                            <TechIcon size={14} color={color} />
+                            {name}
+                          </span>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+
+        {/* Helper hint */}
+        <p
+          style={{
+            color: "rgba(118,219,219,0.35)",
+            fontSize: "12px",
+            marginTop: "60px",
+            letterSpacing: "1px",
+          }}
+        >
+          ↑ Hover a category to expand
+        </p>
       </div>
     </section>
   );

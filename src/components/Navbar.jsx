@@ -1,6 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 
+const navLinks = [
+  { id: "intro", label: "Home" },
+  { id: "about", label: "About" },
+  { id: "skills", label: "Skills" },
+  { id: "projects", label: "Projects" },
+  { id: "contact", label: "Contact" },
+];
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
@@ -9,6 +17,15 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleLinkClick = (e, id) => {
+    e.preventDefault();
+    const target = document.getElementById(id);
+    if (!target) return;
+    const navHeight = 80;
+    const top = target.getBoundingClientRect().top + window.scrollY - navHeight;
+    window.scrollTo({ top, behavior: "smooth" });
+  };
 
   return (
     <nav
@@ -31,36 +48,42 @@ export default function Navbar() {
         fontFamily: "var(--font-manrope), sans-serif",
       }}
     >
-      <span
-        style={{
-          fontSize: "22px",
-          fontWeight: 800,
-          letterSpacing: "1px",
-          color: "#f75082",
-          cursor: "pointer",
-        }}
-      >
-        FBN.dev
-      </span>
+      {/* [F]elina Logo */}
+<a
+  href="#intro"
+  onClick={(e) => handleLinkClick(e, "intro")}
+  style={{
+    textDecoration: "none",
+    fontSize: "22px",
+    fontWeight: 800,
+    letterSpacing: "1px",
+    cursor: "pointer",
+    color: "#76dbdb",
+  }}
+>
+  [F]elina
+</a>
 
+      {/* Nav Links */}
       <div style={{ display: "flex", gap: "36px" }}>
-        {["intro", "about", "skills", "projects", "contact"].map((item) => (
+        {navLinks.map(({ id, label }) => (
           <a
-            key={item}
-            href={`#${item}`}
+            key={id}
+            href={`#${id}`}
+            onClick={(e) => handleLinkClick(e, id)}
             style={{
               color: "#76dbdb",
               textDecoration: "none",
               fontSize: "14px",
-              textTransform: "capitalize",
               letterSpacing: "1.5px",
               fontWeight: 500,
               transition: "color 0.3s",
+              cursor: "pointer",
             }}
             onMouseOver={(e) => (e.target.style.color = "#f75082")}
             onMouseOut={(e) => (e.target.style.color = "#76dbdb")}
           >
-            {item}
+            {label}
           </a>
         ))}
       </div>

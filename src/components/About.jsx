@@ -1,4 +1,5 @@
 "use client";
+import CircularText from "./CircularText";
 
 export default function About() {
   return (
@@ -14,6 +15,7 @@ export default function About() {
         overflow: "hidden",
         boxSizing: "border-box",
         fontFamily: "var(--font-manrope), sans-serif",
+        scrollMarginTop: "80px",
       }}
     >
       <div
@@ -44,6 +46,7 @@ export default function About() {
           zIndex: 1,
         }}
       >
+        {/* LEFT */}
         <div style={{ flex: 1 }}>
           <p
             style={{
@@ -81,7 +84,7 @@ export default function About() {
             }}
           >
             {[
-              "I'm a PERN Stack Developer passionate about building fast, scalable, and user-friendly web applications.",
+              "I'm a Full Stack Developer passionate about building fast, scalable, and user-friendly web applications.",
               "I enjoy transforming ideas into clean digital experiences with modern technologies and intuitive design.",
               "Focused on continuous learning, performance, and writing clean, maintainable code.",
             ].map((text, i) => (
@@ -197,19 +200,29 @@ export default function About() {
           </div>
         </div>
 
+        {/* RIGHT — Photo Circle WITH CircularText around */}
         <div
           style={{
-            flex: "0 0 380px",
+            flex: "0 0 460px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             position: "relative",
+            height: "460px",
           }}
         >
+          {/* Circular Rotating Text */}
+          <CircularText
+            text="[F]elina • DEVELOPER • [F]elina • DEVELOPER • "
+            spinDuration={25}
+            onHover="speedUp"
+          />
+
+          {/* Photo Circle (smaller now to fit inside text ring) */}
           <div
             style={{
-              width: "360px",
-              height: "360px",
+              width: "320px",
+              height: "320px",
               borderRadius: "50%",
               background:
                 "linear-gradient(135deg, rgba(247,80,130,0.25), rgba(118,219,219,0.12))",
@@ -220,12 +233,13 @@ export default function About() {
               boxShadow:
                 "0 0 80px rgba(247,80,130,0.3), 0 0 160px rgba(118,219,219,0.1)",
               border: "1px solid rgba(247,80,130,0.4)",
+              zIndex: 1,
             }}
           >
             <div
               style={{
-                width: "300px",
-                height: "300px",
+                width: "270px",
+                height: "270px",
                 borderRadius: "50%",
                 background:
                   "linear-gradient(135deg, #3a2659 0%, #271a38 50%, #1a0f28 100%)",
