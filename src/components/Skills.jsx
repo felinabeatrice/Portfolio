@@ -6,6 +6,11 @@ import skills from "@/data/skills";
 export default function Skills() {
   const [hoveredCategory, setHoveredCategory] = useState(null);
 
+  // Flat list of all skills with their parent category attached
+  const allSkills = skills.flatMap(({ category, items }) =>
+    items.map((item) => ({ ...item, category }))
+  );
+
   return (
     <section
       id="skills"
@@ -22,6 +27,7 @@ export default function Skills() {
         scrollMarginTop: "80px",
       }}
     >
+      {/* Background glow */}
       <div
         style={{
           position: "absolute",
@@ -146,10 +152,7 @@ export default function Skills() {
                       initial={{ opacity: 0, y: -10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                      transition={{
-                        duration: 0.25,
-                        ease: "easeOut",
-                      }}
+                      transition={{ duration: 0.25, ease: "easeOut" }}
                       style={{
                         position: "absolute",
                         top: "calc(100% + 14px)",
@@ -165,7 +168,7 @@ export default function Skills() {
                         zIndex: 100,
                       }}
                     >
-                      {/* Arrow pointing up */}
+                      {/* Arrow */}
                       <div
                         style={{
                           position: "absolute",
@@ -200,8 +203,7 @@ export default function Skills() {
                               fontWeight: 600,
                               color: "#76dbdb",
                               background: "rgba(118,219,219,0.06)",
-                              border:
-                                "1px solid rgba(118,219,219,0.25)",
+                              border: "1px solid rgba(118,219,219,0.25)",
                               letterSpacing: "0.3px",
                             }}
                           >
@@ -218,16 +220,75 @@ export default function Skills() {
           })}
         </div>
 
+        {/* ── Static Skills Grid ── */}
+        <div
+          style={{
+            marginTop: "80px",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))",
+            gap: "16px",
+          }}
+        >
+          {allSkills.map(({ name, icon: Icon, color, category }) => {
+            const isHighlighted =
+              hoveredCategory === null || hoveredCategory === category;
+
+            return (
+              <motion.div
+                key={name}
+                animate={{
+                  opacity: isHighlighted ? 1 : 0.15,
+                  scale: isHighlighted ? 1 : 0.96,
+                }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "12px",
+                  padding: "24px 16px",
+                  borderRadius: "16px",
+                  background: isHighlighted
+                    ? "rgba(118,219,219,0.05)"
+                    : "rgba(118,219,219,0.02)",
+                  border: isHighlighted
+                    ? "1px solid rgba(118,219,219,0.2)"
+                    : "1px solid rgba(118,219,219,0.07)",
+                  transition: "background 0.3s ease, border 0.3s ease",
+                  cursor: "default",
+                }}
+              >
+                <Icon size={32} color={isHighlighted ? color : "#76dbdb"} />
+                <span
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    color: isHighlighted
+                      ? "rgba(118,219,219,0.85)"
+                      : "rgba(118,219,219,0.3)",
+                    letterSpacing: "0.5px",
+                    textAlign: "center",
+                    transition: "color 0.3s ease",
+                  }}
+                >
+                  {name}
+                </span>
+              </motion.div>
+            );
+          })}
+        </div>
+
         {/* Helper hint */}
         <p
           style={{
             color: "rgba(118,219,219,0.35)",
             fontSize: "12px",
-            marginTop: "60px",
+            marginTop: "40px",
             letterSpacing: "1px",
           }}
         >
-          ↑ Hover a category to expand
+          ↑ Hover a category to highlight
         </p>
       </div>
     </section>

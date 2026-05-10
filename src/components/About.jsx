@@ -102,6 +102,7 @@ export default function About() {
             ))}
           </div>
 
+          {/* Currently Building */}
           <div
             style={{
               padding: "16px 20px",
@@ -151,16 +152,18 @@ export default function About() {
             </div>
           </div>
 
+          {/* Stat Cards */}
           <div
             style={{
               display: "flex",
               gap: "24px",
               flexWrap: "wrap",
+              marginBottom: "36px",
             }}
           >
             {[
               { num: "3rd", label: "Year Student" },
-              { num: "1+", label: "Projects Built" },
+              { num: "2025", label: "Started Dev Journey" },
               { num: "8+", label: "Technologies" },
             ].map(({ num, label }) => (
               <div
@@ -198,6 +201,57 @@ export default function About() {
               </div>
             ))}
           </div>
+
+          {/* Resume Download Button */}
+          <a
+            href="/resume.pdf"
+            download
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "14px 28px",
+              borderRadius: "50px",
+              background: "transparent",
+              border: "1px solid #f75082",
+              color: "#f75082",
+              fontSize: "14px",
+              fontWeight: 700,
+              letterSpacing: "1px",
+              textDecoration: "none",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              fontFamily: "var(--font-manrope), sans-serif",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#f75082";
+              e.currentTarget.style.color = "#271a38";
+              e.currentTarget.style.boxShadow =
+                "0 8px 30px rgba(247,80,130,0.4)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "#f75082";
+              e.currentTarget.style.boxShadow = "none";
+            }}
+          >
+            {/* Download icon (inline SVG — no extra dependency) */}
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Download Resume
+          </a>
         </div>
 
         {/* RIGHT — Photo Circle WITH CircularText around */}
@@ -218,7 +272,7 @@ export default function About() {
             onHover="speedUp"
           />
 
-          {/* Photo Circle (smaller now to fit inside text ring) */}
+          {/* Photo Circle */}
           <div
             style={{
               width: "320px",
