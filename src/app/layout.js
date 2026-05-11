@@ -10,6 +10,7 @@ const bitcount = Bitcount_Single({
   subsets: ["latin"],
   variable: "--font-bitcount",
   display: "swap",
+  preload: false,
 });
 
 export const metadata = {

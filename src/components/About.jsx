@@ -73,59 +73,6 @@ export default function About() {
             </RevealItem>
           ))}
 
-          {/* Currently Building */}
-          <RevealItem delay={560} distance={16} duration={500}>
-            <div
-              style={{
-                padding: "16px 20px",
-                borderRadius: "12px",
-                background: "rgba(247,80,130,0.08)",
-                border: "1px solid rgba(247,80,130,0.4)",
-                marginBottom: "40px",
-                marginTop: "18px",
-                display: "flex",
-                alignItems: "flex-start",
-                gap: "12px",
-              }}
-            >
-              <span style={{ fontSize: "20px" }}>🚧</span>
-              <div>
-                <p
-                  style={{
-                    margin: "0 0 4px 0",
-                    color: "#f75082",
-                    fontSize: "12px",
-                    letterSpacing: "2px",
-                    textTransform: "uppercase",
-                    fontWeight: 700,
-                  }}
-                >
-                  Currently Building
-                </p>
-                <p
-                  style={{
-                    margin: 0,
-                    color: "rgba(118,219,219,0.85)",
-                    fontSize: "14px",
-                    lineHeight: 1.7,
-                  }}
-                >
-                  <span
-                    style={{
-                      color: "#76dbdb",
-                      fontWeight: 700,
-                      fontSize: "16px",
-                    }}
-                  >
-                    LearnHub
-                  </span>{" "}
-                  — A full-stack Learning Management System built with
-                  PostgreSQL, Express, React & Node.js
-                </p>
-              </div>
-            </div>
-          </RevealItem>
-
           {/* Stat Cards */}
           <div
             style={{

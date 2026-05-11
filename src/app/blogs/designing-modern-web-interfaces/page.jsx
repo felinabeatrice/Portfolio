@@ -1,9 +1,8 @@
-import { ArrowLeft } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import BackButtonBottom from "@/components/BackButtonBottom";
 
 export const metadata = {
-  title: "Designing Modern Web Interfaces | Felina Beatrice",
+  title: "Designing Modern Web Interfaces",
   description:
     "Exploring clean UI patterns, motion, and user-focused design.",
 };
@@ -20,7 +19,6 @@ export default function DesigningModernWebInterfaces() {
         color: "#76dbdb",
       }}
     >
-      {/* Glow */}
       <div
         style={{
           position: "fixed",
@@ -82,6 +80,31 @@ export default function DesigningModernWebInterfaces() {
             borderRadius: "2px",
           }}
         />
+
+        {/* Hero Image */}
+        <div
+          style={{
+            width: "100%",
+            height: "400px",
+            borderRadius: "20px",
+            overflow: "hidden",
+            marginBottom: "48px",
+            border: "1px solid rgba(118,219,219,0.15)",
+            boxShadow:
+              "0 8px 40px rgba(247,80,130,0.1), 0 0 60px rgba(118,219,219,0.05)",
+          }}
+        >
+          <img
+            src="/blogs/design-hero.jpg"
+            alt="Designing Modern Web Interfaces"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
+          />
+        </div>
 
         <div
           style={{

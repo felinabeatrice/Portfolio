@@ -2,7 +2,7 @@ import BackButton from "@/components/BackButton";
 import BackButtonBottom from "@/components/BackButtonBottom";
 
 export const metadata = {
-  title: "Optimizing Frontend Performance | Felina Beatrice",
+  title: "Optimizing Frontend Performance",
   description:
     "Creating fast, responsive, and smooth user experiences.",
 };
@@ -80,6 +80,31 @@ export default function OptimizingFrontendPerformance() {
             borderRadius: "2px",
           }}
         />
+
+        {/* Hero Image */}
+        <div
+          style={{
+            width: "100%",
+            height: "400px",
+            borderRadius: "20px",
+            overflow: "hidden",
+            marginBottom: "48px",
+            border: "1px solid rgba(118,219,219,0.15)",
+            boxShadow:
+              "0 8px 40px rgba(247,80,130,0.08), 0 0 60px rgba(247,80,130,0.04)",
+          }}
+        >
+          <img
+            src="/blogs/performance-hero.jpg"
+            alt="Optimizing Frontend Performance"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
+          />
+        </div>
 
         <div
           style={{

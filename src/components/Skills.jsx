@@ -7,11 +7,19 @@ import RevealItem from "./RevealItem";
 import SectionHeader from "./SectionHeader";
 
 export default function Skills() {
-  const [hoveredCategory, setHoveredCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const allSkills = skills.flatMap(({ category, items }) =>
     items.map((item) => ({ ...item, category }))
   );
+
+  const filteredSkills = selectedCategory
+    ? allSkills.filter((skill) => skill.category === selectedCategory)
+    : allSkills;
+
+  const handlePillClick = (category) => {
+    setSelectedCategory((prev) => (prev === category ? null : category));
+  };
 
   return (
     <section
@@ -56,7 +64,7 @@ export default function Skills() {
         <SectionHeader
           label="What I Know"
           title="My Skills"
-          subtext="Hover any category to reveal the technologies I use."
+          subtext="Click a category to filter the technologies I use."
           align="center"
         />
 
@@ -67,128 +75,198 @@ export default function Skills() {
               display: "flex",
               gap: "16px",
               flexWrap: "wrap",
-              position: "relative",
               justifyContent: "center",
             }}
-            onMouseLeave={() => setHoveredCategory(null)}
           >
-            {skills.map(({ category, icon: CategoryIcon, items }) => {
-              const isActive = hoveredCategory === category;
+            {skills.map(({ category, icon: CategoryIcon }) => {
+              const isActive = selectedCategory === category;
 
               return (
-                <div
-                  key={category}
-                  onMouseEnter={() => setHoveredCategory(category)}
-                  style={{ position: "relative", cursor: "pointer" }}
-                >
-                  <div
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      padding: "14px 24px",
-                      borderRadius: "50px",
-                      background: isActive ? "#f75082" : "rgba(118,219,219,0.05)",
-                      border: isActive ? "1px solid #f75082" : "1px solid rgba(118,219,219,0.25)",
-                      transition: "all 0.3s ease",
-                      color: isActive ? "#271a38" : "#76dbdb",
-                      fontWeight: 700,
-                      fontSize: "15px",
-                      letterSpacing: "0.5px",
-                      boxShadow: isActive ? "0 8px 30px rgba(247,80,130,0.4)" : "none",
-                    }}
-                  >
-                    <CategoryIcon size={20} color={isActive ? "#271a38" : "#f75082"} />
-                    {category}
-                  </div>
-
-                  <AnimatePresence>
-                    {isActive && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                        transition={{ duration: 0.25, ease: "easeOut" }}
-                        style={{
-                          position: "absolute",
-                          top: "calc(100% + 14px)",
-                          left: 0,
-                          minWidth: "260px",
-                          padding: "20px",
-                          borderRadius: "16px",
-                          background: "rgba(39,26,56,0.95)",
-                          backdropFilter: "blur(14px)",
-                          border: "1px solid rgba(247,80,130,0.4)",
-                          boxShadow: "0 12px 40px rgba(247,80,130,0.25), 0 0 60px rgba(247,80,130,0.15)",
-                          zIndex: 100,
-                        }}
-                      >
-                        <div style={{ position: "absolute", top: "-7px", left: "30px", width: "12px", height: "12px", background: "rgba(39,26,56,0.95)", borderTop: "1px solid rgba(247,80,130,0.4)", borderLeft: "1px solid rgba(247,80,130,0.4)", transform: "rotate(45deg)" }} />
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-                          {items.map(({ name, icon: TechIcon, color }) => (
-                            <span key={name} style={{ display: "inline-flex", alignItems: "center", gap: "6px", padding: "6px 12px", borderRadius: "50px", fontSize: "12px", fontWeight: 600, color: "#76dbdb", background: "rgba(118,219,219,0.06)", border: "1px solid rgba(118,219,219,0.25)", letterSpacing: "0.3px" }}>
-                              <TechIcon size={14} color={color} />{name}
-                            </span>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                <CategoryPill
+  key={category}
+  category={category}
+  CategoryIcon={CategoryIcon}
+  isActive={isActive}
+  onClick={() => handlePillClick(category)}
+/>
               );
             })}
           </div>
         </RevealItem>
 
-        {/* Static Skills Grid */}
+        {/* Skills Grid */}
         <div
           style={{
             marginTop: "80px",
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))",
             gap: "16px",
+            minHeight: "200px",
           }}
         >
-          {allSkills.map(({ name, icon: Icon, color, category }, i) => {
-            const isHighlighted =
-              hoveredCategory === null || hoveredCategory === category;
-
-            return (
-              <RevealItem key={name} delay={400 + i * 40} distance={12} duration={450}>
-                <motion.div
-                  animate={{
-                    opacity: isHighlighted ? 1 : 0.15,
-                    scale: isHighlighted ? 1 : 0.96,
-                  }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "12px",
-                    padding: "24px 16px",
-                    borderRadius: "16px",
-                    background: isHighlighted ? "rgba(118,219,219,0.05)" : "rgba(118,219,219,0.02)",
-                    border: isHighlighted ? "1px solid rgba(118,219,219,0.2)" : "1px solid rgba(118,219,219,0.07)",
-                    transition: "background 0.3s ease, border 0.3s ease",
-                    cursor: "default",
-                  }}
-                >
-                  <Icon size={32} color={isHighlighted ? color : "#76dbdb"} />
-                  <span style={{ fontSize: "11px", fontWeight: 600, color: isHighlighted ? "rgba(118,219,219,0.85)" : "rgba(118,219,219,0.3)", letterSpacing: "0.5px", textAlign: "center", transition: "color 0.3s ease" }}>{name}</span>
-                </motion.div>
-              </RevealItem>
-            );
-          })}
+          <AnimatePresence mode="popLayout">
+          {filteredSkills.map(({ name, icon: Icon, color }, i) => (
+  <motion.div
+    key={name}
+    layout
+    initial={{ opacity: 0, scale: 0.9, y: 12 }}
+    animate={{ opacity: 1, scale: 1, y: 0 }}
+    exit={{ opacity: 0, scale: 0.9, y: -8 }}
+    transition={{ duration: 0.3, ease: "easeOut", delay: i * 0.03 }}
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "12px",
+      padding: "24px 16px",
+      borderRadius: "16px",
+      background: "rgba(118,219,219,0.05)",
+      border: "1px solid rgba(118,219,219,0.2)",
+      cursor: "default",
+    }}
+  >
+    <Icon size={32} color={color} />
+    <span
+      style={{
+        fontSize: "11px",
+        fontWeight: 600,
+        color: "rgba(118,219,219,0.85)",
+        letterSpacing: "0.5px",
+        textAlign: "center",
+      }}
+    >
+      {name}
+    </span>
+  </motion.div>
+))}
+          </AnimatePresence>
         </div>
 
+        {/* Helper hint */}
         <RevealItem delay={900} distance={8} duration={400}>
-          <p style={{ color: "rgba(118,219,219,0.35)", fontSize: "12px", marginTop: "40px", letterSpacing: "1px", textAlign: "center" }}>
-            ↑ Hover a category to highlight
+          <p
+            style={{
+              color: "rgba(118,219,219,0.35)",
+              fontSize: "12px",
+              marginTop: "40px",
+              letterSpacing: "1px",
+              textAlign: "center",
+            }}
+          >
+            Click a category to filter · Click again to reset
           </p>
         </RevealItem>
       </RevealSection>
     </section>
   );
+
+function SkillCard({ name, Icon, color }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "12px",
+        padding: "24px 16px",
+        borderRadius: "16px",
+        background: hovered
+          ? "rgba(118,219,219,0.1)"
+          : "rgba(118,219,219,0.05)",
+        border: hovered
+          ? "1px solid rgba(247,80,130,0.5)"
+          : "1px solid rgba(118,219,219,0.2)",
+        cursor: "default",
+        transition: "all 0.3s ease",
+        transform: hovered ? "translateY(-4px)" : "translateY(0)",
+        boxShadow: hovered
+          ? `0 8px 24px rgba(247,80,130,0.2), 0 0 40px ${color}20`
+          : "none",
+      }}
+    >
+      <Icon
+        size={32}
+        color={color}
+        style={{
+          filter: hovered ? `drop-shadow(0 0 10px ${color})` : "none",
+          transition: "filter 0.3s ease",
+        }}
+      />
+      <span
+        style={{
+          fontSize: "11px",
+          fontWeight: 600,
+          color: hovered
+            ? "#76dbdb"
+            : "rgba(118,219,219,0.85)",
+          letterSpacing: "0.5px",
+          textAlign: "center",
+          transition: "color 0.3s ease",
+        }}
+      >
+        {name}
+      </span>
+    </div>
+  );
+}
+function CategoryPill({ category, CategoryIcon, isActive, onClick }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "10px",
+        padding: "14px 24px",
+        borderRadius: "50px",
+        background: isActive
+          ? "#f75082"
+          : hovered
+          ? "rgba(247,80,130,0.1)"
+          : "rgba(118,219,219,0.05)",
+        border: isActive
+          ? "1px solid #f75082"
+          : hovered
+          ? "1px solid rgba(247,80,130,0.5)"
+          : "1px solid rgba(118,219,219,0.25)",
+        transition: "all 0.3s ease",
+        color: isActive ? "#271a38" : hovered ? "#f75082" : "#76dbdb",
+        fontWeight: 700,
+        fontSize: "15px",
+        letterSpacing: "0.5px",
+        boxShadow: isActive
+          ? "0 8px 30px rgba(247,80,130,0.4)"
+          : hovered
+          ? "0 4px 20px rgba(247,80,130,0.25), 0 0 40px rgba(247,80,130,0.1)"
+          : "none",
+        cursor: "pointer",
+        outline: "none",
+        fontFamily: "var(--font-manrope), sans-serif",
+        transform: hovered && !isActive ? "translateY(-2px)" : "translateY(0)",
+      }}
+    >
+      <CategoryIcon
+        size={20}
+        color={isActive ? "#271a38" : hovered ? "#f75082" : "#f75082"}
+        style={{
+          filter: hovered && !isActive
+            ? "drop-shadow(0 0 8px rgba(247,80,130,0.5))"
+            : "none",
+          transition: "filter 0.3s ease",
+        }}
+      />
+      {category}
+    </button>
+  );
+}
 }

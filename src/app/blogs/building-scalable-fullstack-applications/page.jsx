@@ -2,7 +2,7 @@ import BackButton from "@/components/BackButton";
 import BackButtonBottom from "@/components/BackButtonBottom";
 
 export const metadata = {
-  title: "Building Scalable Full-Stack Applications | Felina Beatrice",
+  title: "Building Scalable Full-Stack Applications",
   description:
     "Thoughts on structuring efficient PERN stack applications.",
 };
@@ -80,6 +80,31 @@ export default function BuildingScalableFullStackApplications() {
             borderRadius: "2px",
           }}
         />
+
+        {/* Hero Image */}
+        <div
+          style={{
+            width: "100%",
+            height: "400px",
+            borderRadius: "20px",
+            overflow: "hidden",
+            marginBottom: "48px",
+            border: "1px solid rgba(118,219,219,0.15)",
+            boxShadow:
+              "0 8px 40px rgba(118,219,219,0.08), 0 0 60px rgba(118,219,219,0.04)",
+          }}
+        >
+          <img
+            src="/blogs/fullstack-hero.jpg"
+            alt="Building Scalable Full-Stack Applications"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
+          />
+        </div>
 
         <div
           style={{

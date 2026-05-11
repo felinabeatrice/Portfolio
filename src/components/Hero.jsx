@@ -73,40 +73,7 @@ export default function Hero() {
           zIndex: 2,
         }}
       >
-        {/* Badge */}
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "6px 16px",
-            borderRadius: "50px",
-            border: "1px solid rgba(247,80,130,0.5)",
-            background: "rgba(247,80,130,0.12)",
-            marginBottom: "28px",
-          }}
-        >
-          <span
-            style={{
-              width: "8px",
-              height: "8px",
-              borderRadius: "50%",
-              background: "#f75082",
-              animation: "pulse 2s infinite",
-            }}
-          />
-          <span
-            style={{
-              fontSize: "12px",
-              color: "#f75082",
-              letterSpacing: "2px",
-              textTransform: "uppercase",
-              fontWeight: 700,
-            }}
-          >
-            Available for work
-          </span>
-        </div>
+        
 
         {/* Name */}
         <h1
