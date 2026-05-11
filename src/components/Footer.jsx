@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ArrowUp } from "lucide-react";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { Mail } from "lucide-react";
+import Link from "next/link";
 
 const socials = [
   { icon: FaGithub, href: "https://github.com/felinabeatrice", label: "GitHub" },
@@ -36,21 +37,20 @@ export default function Footer() {
           flexWrap: "wrap",
         }}
       >
-        {/* Logo + Tagline */}
+        {/* Logo + Tagline + Arcade */}
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          {/* [F]elina Logo */}
-<a
-  href="#intro"
-  style={{
-    textDecoration: "none",
-    fontSize: "18px",
-    fontWeight: 800,
-    letterSpacing: "1px",
-    color: "#76dbdb",
-  }}
->
-  [F]elina
-</a>
+          <a
+            href="#intro"
+            style={{
+              textDecoration: "none",
+              fontSize: "18px",
+              fontWeight: 800,
+              letterSpacing: "1px",
+              color: "#76dbdb",
+            }}
+          >
+            [F]elina
+          </a>
 
           <span
             style={{
@@ -61,6 +61,8 @@ export default function Footer() {
           >
             • Building scalable web experiences
           </span>
+
+          <ArcadeLink />
         </div>
 
         {/* Copyright */}
@@ -84,15 +86,9 @@ export default function Footer() {
           }}
         >
           {socials.map(({ icon: Icon, href, label }) => (
-            <FooterIcon
-              key={label}
-              Icon={Icon}
-              href={href}
-              label={label}
-            />
+            <FooterIcon key={label} Icon={Icon} href={href} label={label} />
           ))}
 
-          {/* Back to Top */}
           <button
             onClick={scrollToTop}
             aria-label="Back to top"
@@ -126,6 +122,50 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+function ArcadeLink() {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <>
+      <style>
+        {`
+          @keyframes arcadePulse {
+            0%, 100% { box-shadow: 0 0 8px rgba(247,80,130,0.15); }
+            50% { box-shadow: 0 0 18px rgba(247,80,130,0.35); }
+          }
+        `}
+      </style>
+      <Link
+        href="/game"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "6px",
+          padding: "4px 12px",
+          borderRadius: "20px",
+          background: hovered
+            ? "rgba(247,80,130,0.15)"
+            : "rgba(118,219,219,0.05)",
+          border: hovered
+            ? "1px solid rgba(247,80,130,0.4)"
+            : "1px solid rgba(247,80,130,0.2)",
+          color: hovered ? "#f75082" : "rgba(247,80,130,0.6)",
+          textDecoration: "none",
+          fontSize: "11px",
+          fontWeight: 700,
+          letterSpacing: "1px",
+          transition: "all 0.3s ease",
+          animation: "arcadePulse 2.5s ease-in-out infinite",
+        }}
+      >
+        🕹️ Arcade
+      </Link>
+    </>
   );
 }
 
