@@ -5,8 +5,9 @@ import projects from "@/data/projects";
 import RevealSection from "./RevealSection";
 import RevealItem from "./RevealItem";
 import SectionHeader from "./SectionHeader";
+import useBreakpoint from "@/hooks/useBreakpoint";
 
-/* ── Cover components — unchanged ── */
+/* ── All Cover components unchanged ── */
 function LearnHubCover() {
   return (
     <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, #1a0f28 0%, #2d1b45 50%, #3a1f52 100%)", zIndex: 0, overflow: "hidden" }}>
@@ -52,7 +53,6 @@ const coverMap = {
   "Courier Management System": CourierCover,
 };
 
-/* ── Featured Card ── */
 function FeaturedCard({ project }) {
   const [hovered, setHovered] = useState(false);
   const Cover = coverMap[project.title];
@@ -75,11 +75,10 @@ function FeaturedCard({ project }) {
       </div>
     </div>
   );
-  if (project.githubUrl) { return (<a href={project.githubUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", display: "block", height: "100%" }}>{cardContent}</a>); }
+  if (project.githubUrl) return (<a href={project.githubUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", display: "block", height: "100%" }}>{cardContent}</a>);
   return cardContent;
 }
 
-/* ── Small Card ── */
 function SmallCard({ project }) {
   const [hovered, setHovered] = useState(false);
   const Cover = coverMap[project.title];
@@ -102,21 +101,28 @@ function SmallCard({ project }) {
       </div>
     </div>
   );
-  if (project.githubUrl) { return (<a href={project.githubUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", display: "block", height: "100%" }}>{cardContent}</a>); }
+  if (project.githubUrl) return (<a href={project.githubUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", display: "block", height: "100%" }}>{cardContent}</a>);
   return cardContent;
 }
 
-/* ── Main Section ── */
 export default function Projects() {
   const featured = projects[0];
   const sideProjects = projects.slice(1);
+  const breakpoint = useBreakpoint();
+  const isMobile = breakpoint === "mobile";
+  const isTablet = breakpoint === "tablet";
+  const isSmall = isMobile || isTablet;
 
   return (
     <section
       id="projects"
       style={{
         minHeight: "100vh",
-        padding: "100px 80px",
+        padding: isMobile
+          ? "80px 24px"
+          : isTablet
+          ? "80px 40px"
+          : "100px 80px",
         background: "#271a38",
         position: "relative",
         overflow: "hidden",
@@ -144,21 +150,24 @@ export default function Projects() {
           align="center"
         />
 
-        {/* Bento Grid */}
+        {/* Bento Grid — stacks on mobile */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1.6fr 1fr",
-            gridTemplateRows: "1fr 1fr",
-            gap: "20px",
-            minHeight: "500px",
+            gridTemplateColumns: isSmall ? "1fr" : "1.6fr 1fr",
+            gridTemplateRows: isSmall ? "auto" : "1fr 1fr",
+            gap: isMobile ? "16px" : "20px",
+            minHeight: isSmall ? "auto" : "500px",
           }}
         >
           <RevealItem
             delay={300}
             distance={24}
             duration={600}
-            style={{ gridRow: "1 / 3", minHeight: "500px" }}
+            style={{
+              gridRow: isSmall ? "auto" : "1 / 3",
+              minHeight: isMobile ? "280px" : "500px",
+            }}
           >
             <div style={{ height: "100%" }}>
               <FeaturedCard project={featured} />
@@ -171,7 +180,7 @@ export default function Projects() {
               delay={450 + i * 150}
               distance={20}
               duration={500}
-              style={{ minHeight: "235px" }}
+              style={{ minHeight: isMobile ? "200px" : "235px" }}
             >
               <div style={{ height: "100%" }}>
                 <SmallCard project={project} />

@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, Mail } from "lucide-react";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
-import { Mail } from "lucide-react";
 import Link from "next/link";
+import useBreakpoint from "@/hooks/useBreakpoint";
 
 const socials = [
   { icon: FaGithub, href: "https://github.com/felinabeatrice", label: "GitHub" },
@@ -12,15 +12,18 @@ const socials = [
 ];
 
 export default function Footer() {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const breakpoint = useBreakpoint();
+  const isMobile = breakpoint === "mobile";
+  const isTablet = breakpoint === "tablet";
+  const isSmall = isMobile || isTablet;
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
     <footer
       style={{
         background: "#1a0f28",
-        padding: "32px 60px",
+        padding: isMobile ? "28px 24px" : isTablet ? "28px 40px" : "32px 60px",
         borderTop: "1px solid rgba(118,219,219,0.1)",
         fontFamily: "var(--font-manrope), sans-serif",
         position: "relative",
@@ -31,14 +34,23 @@ export default function Footer() {
           maxWidth: "1200px",
           margin: "0 auto",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "20px",
-          flexWrap: "wrap",
+          flexDirection: isSmall ? "column" : "row",
+          alignItems: isSmall ? "center" : "center",
+          justifyContent: isSmall ? "center" : "space-between",
+          gap: isSmall ? "20px" : "20px",
+          textAlign: isSmall ? "center" : "left",
         }}
       >
         {/* Logo + Tagline + Arcade */}
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            flexWrap: "wrap",
+            justifyContent: isSmall ? "center" : "flex-start",
+          }}
+        >
           <a
             href="#intro"
             style={{
@@ -52,15 +64,11 @@ export default function Footer() {
             [F]elina
           </a>
 
-          <span
-            style={{
-              color: "rgba(118,219,219,0.4)",
-              fontSize: "13px",
-              letterSpacing: "0.3px",
-            }}
-          >
-            • Building scalable web experiences
-          </span>
+          {!isMobile && (
+            <span style={{ color: "rgba(118,219,219,0.4)", fontSize: "13px" }}>
+              • Building scalable web experiences
+            </span>
+          )}
 
           <ArcadeLink />
         </div>
@@ -78,17 +86,10 @@ export default function Footer() {
         </p>
 
         {/* Socials + Back to top */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "16px",
-          }}
-        >
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           {socials.map(({ icon: Icon, href, label }) => (
             <FooterIcon key={label} Icon={Icon} href={href} label={label} />
           ))}
-
           <button
             onClick={scrollToTop}
             aria-label="Back to top"
@@ -104,7 +105,7 @@ export default function Footer() {
               alignItems: "center",
               justifyContent: "center",
               transition: "all 0.3s",
-              marginLeft: "8px",
+              marginLeft: "4px",
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.background = "#f75082";
@@ -127,17 +128,14 @@ export default function Footer() {
 
 function ArcadeLink() {
   const [hovered, setHovered] = useState(false);
-
   return (
     <>
-      <style>
-        {`
-          @keyframes arcadePulse {
-            0%, 100% { box-shadow: 0 0 8px rgba(247,80,130,0.15); }
-            50% { box-shadow: 0 0 18px rgba(247,80,130,0.35); }
-          }
-        `}
-      </style>
+      <style>{`
+        @keyframes arcadePulse {
+          0%, 100% { box-shadow: 0 0 8px rgba(247,80,130,0.15); }
+          50% { box-shadow: 0 0 18px rgba(247,80,130,0.35); }
+        }
+      `}</style>
       <Link
         href="/game"
         onMouseEnter={() => setHovered(true)}
@@ -148,12 +146,8 @@ function ArcadeLink() {
           gap: "6px",
           padding: "4px 12px",
           borderRadius: "20px",
-          background: hovered
-            ? "rgba(247,80,130,0.15)"
-            : "rgba(118,219,219,0.05)",
-          border: hovered
-            ? "1px solid rgba(247,80,130,0.4)"
-            : "1px solid rgba(247,80,130,0.2)",
+          background: hovered ? "rgba(247,80,130,0.15)" : "rgba(118,219,219,0.05)",
+          border: hovered ? "1px solid rgba(247,80,130,0.4)" : "1px solid rgba(247,80,130,0.2)",
           color: hovered ? "#f75082" : "rgba(247,80,130,0.6)",
           textDecoration: "none",
           fontSize: "11px",
@@ -188,12 +182,8 @@ function FooterIcon({ Icon, href, label }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: hovered
-          ? "rgba(247,80,130,0.15)"
-          : "rgba(118,219,219,0.05)",
-        border: hovered
-          ? "1px solid #f75082"
-          : "1px solid rgba(118,219,219,0.2)",
+        background: hovered ? "rgba(247,80,130,0.15)" : "rgba(118,219,219,0.05)",
+        border: hovered ? "1px solid #f75082" : "1px solid rgba(118,219,219,0.2)",
         color: hovered ? "#f75082" : "rgba(118,219,219,0.7)",
         textDecoration: "none",
         transition: "all 0.3s",

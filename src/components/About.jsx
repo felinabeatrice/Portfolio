@@ -3,8 +3,18 @@ import CircularText from "./CircularText";
 import RevealSection from "./RevealSection";
 import RevealItem from "./RevealItem";
 import SectionHeader from "./SectionHeader";
+import useBreakpoint from "@/hooks/useBreakpoint";
 
 export default function About() {
+  const breakpoint = useBreakpoint();
+  const isMobile = breakpoint === "mobile";
+  const isTablet = breakpoint === "tablet";
+  const isSmall = isMobile || isTablet;
+
+  const circleOuter = isMobile ? 180 : isTablet ? 260 : 320;
+  const circleInner = isMobile ? 145 : isTablet ? 215 : 270;
+  const containerHeight = isMobile ? 240 : isTablet ? 360 : 460;
+
   return (
     <section
       id="about"
@@ -12,7 +22,11 @@ export default function About() {
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
-        padding: "100px 80px",
+        padding: isMobile
+          ? "80px 24px"
+          : isTablet
+          ? "80px 40px"
+          : "100px 80px",
         background: "#271a38",
         position: "relative",
         overflow: "hidden",
@@ -39,27 +53,32 @@ export default function About() {
       <RevealSection
         style={{
           display: "flex",
+          flexDirection: isSmall ? "column" : "row",
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: isSmall ? "center" : "center",
           width: "100%",
           maxWidth: "1200px",
           margin: "0 auto",
-          gap: "80px",
+          gap: isSmall ? "48px" : "80px",
           position: "relative",
           zIndex: 1,
         }}
       >
-        {/* LEFT */}
-        <div style={{ flex: 1 }}>
+        {/* LEFT — Text */}
+        <div style={{ flex: 1, width: "100%" }}>
           <SectionHeader label="Who I Am" title="About Me" align="left" />
 
-          {/* Paragraphs */}
           {[
             "I'm a Full Stack Developer passionate about building fast, scalable, and user-friendly web applications.",
             "I enjoy transforming ideas into clean digital experiences with modern technologies and intuitive design.",
             "Focused on continuous learning, performance, and writing clean, maintainable code.",
           ].map((text, i) => (
-            <RevealItem key={i} delay={300 + i * 80} distance={14} duration={500}>
+            <RevealItem
+              key={i}
+              delay={300 + i * 80}
+              distance={14}
+              duration={500}
+            >
               <p
                 style={{
                   color: "rgba(118,219,219,0.75)",
@@ -77,7 +96,7 @@ export default function About() {
           <div
             style={{
               display: "flex",
-              gap: "24px",
+              gap: isMobile ? "12px" : "24px",
               flexWrap: "wrap",
               marginBottom: "36px",
             }}
@@ -87,21 +106,26 @@ export default function About() {
               { num: "2025", label: "Started Dev Journey" },
               { num: "8+", label: "Technologies" },
             ].map(({ num, label }, i) => (
-              <RevealItem key={label} delay={640 + i * 80} distance={16} duration={500}>
+              <RevealItem
+                key={label}
+                delay={640 + i * 80}
+                distance={16}
+                duration={500}
+              >
                 <div
                   style={{
-                    padding: "20px 28px",
+                    padding: isMobile ? "14px 18px" : "20px 28px",
                     borderRadius: "14px",
                     background: "rgba(118,219,219,0.05)",
                     border: "1px solid rgba(118,219,219,0.2)",
                     textAlign: "center",
-                    minWidth: "100px",
+                    minWidth: isMobile ? "80px" : "100px",
                   }}
                 >
                   <h3
                     style={{
                       margin: "0 0 4px 0",
-                      fontSize: "32px",
+                      fontSize: isMobile ? "24px" : "32px",
                       fontWeight: 800,
                       color: "#f75082",
                     }}
@@ -112,7 +136,7 @@ export default function About() {
                     style={{
                       margin: 0,
                       color: "rgba(118,219,219,0.6)",
-                      fontSize: "12px",
+                      fontSize: "11px",
                       letterSpacing: "1px",
                       textTransform: "uppercase",
                     }}
@@ -177,26 +201,52 @@ export default function About() {
           </RevealItem>
         </div>
 
-        {/* RIGHT — Photo Circle */}
-        <RevealItem delay={400} distance={20} duration={600} style={{ flex: "0 0 460px" }}>
+        {/* RIGHT — Circle */}
+        <RevealItem
+          delay={400}
+          distance={20}
+          duration={600}
+          style={{
+            flex: isSmall ? "none" : "0 0 460px",
+            width: isSmall ? "100%" : "auto",
+          }}
+        >
           <div
             style={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               position: "relative",
-              height: "460px",
+              height: `${containerHeight}px`,
             }}
           >
-            <CircularText
-              text="[F]elina • DEVELOPER • [F]elina • DEVELOPER • "
-              spinDuration={25}
-              onHover="speedUp"
-            />
+            {/* CircularText — scaled down on mobile */}
             <div
               style={{
-                width: "320px",
-                height: "320px",
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transform: isMobile
+                  ? "scale(0.52)"
+                  : isTablet
+                  ? "scale(0.75)"
+                  : "scale(1)",
+                pointerEvents: isMobile ? "none" : "auto",
+              }}
+            >
+              <CircularText
+                text="[F]elina • DEVELOPER • [F]elina • DEVELOPER • "
+                spinDuration={25}
+                onHover="speedUp"
+              />
+            </div>
+
+            <div
+              style={{
+                width: `${circleOuter}px`,
+                height: `${circleOuter}px`,
                 borderRadius: "50%",
                 background:
                   "linear-gradient(135deg, rgba(247,80,130,0.25), rgba(118,219,219,0.12))",
@@ -212,8 +262,8 @@ export default function About() {
             >
               <div
                 style={{
-                  width: "270px",
-                  height: "270px",
+                  width: `${circleInner}px`,
+                  height: `${circleInner}px`,
                   borderRadius: "50%",
                   background:
                     "linear-gradient(135deg, #3a2659 0%, #271a38 50%, #1a0f28 100%)",
@@ -227,10 +277,54 @@ export default function About() {
                   position: "relative",
                 }}
               >
-                <div style={{ position: "absolute", width: "150px", height: "150px", background: "radial-gradient(circle, rgba(247,80,130,0.4), transparent 70%)", top: "10px", left: "20px", filter: "blur(30px)" }} />
-                <div style={{ position: "absolute", width: "150px", height: "150px", background: "radial-gradient(circle, rgba(118,219,219,0.2), transparent 70%)", bottom: "10px", right: "20px", filter: "blur(30px)" }} />
-                <span style={{ fontSize: "40px", position: "relative", zIndex: 1 }}>📷</span>
-                <span style={{ fontSize: "11px", color: "rgba(118,219,219,0.6)", letterSpacing: "2px", textTransform: "uppercase", position: "relative", zIndex: 1, fontWeight: 700 }}>Photo Coming Soon</span>
+                <div
+                  style={{
+                    position: "absolute",
+                    width: "150px",
+                    height: "150px",
+                    background:
+                      "radial-gradient(circle, rgba(247,80,130,0.4), transparent 70%)",
+                    top: "10px",
+                    left: "20px",
+                    filter: "blur(30px)",
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    width: "150px",
+                    height: "150px",
+                    background:
+                      "radial-gradient(circle, rgba(118,219,219,0.2), transparent 70%)",
+                    bottom: "10px",
+                    right: "20px",
+                    filter: "blur(30px)",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: isMobile ? "24px" : "40px",
+                    position: "relative",
+                    zIndex: 1,
+                  }}
+                >
+                  📷
+                </span>
+                <span
+                  style={{
+                    fontSize: isMobile ? "9px" : "11px",
+                    color: "rgba(118,219,219,0.6)",
+                    letterSpacing: "2px",
+                    textTransform: "uppercase",
+                    position: "relative",
+                    zIndex: 1,
+                    fontWeight: 700,
+                    textAlign: "center",
+                    padding: "0 12px",
+                  }}
+                >
+                  Photo Coming Soon
+                </span>
               </div>
             </div>
           </div>

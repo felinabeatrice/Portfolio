@@ -1,4 +1,6 @@
-import { Manrope, Bitcount_Single } from "next/font/google";
+import { Manrope, Bitcount_Single, Space_Grotesk } from "next/font/google";
+import Cursor from "@/components/Cursor";
+import Intro from "@/components/Intro";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -13,6 +15,19 @@ const bitcount = Bitcount_Single({
   preload: false,
 });
 
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+});
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export const metadata = {
   title: "FB | Felina Beatrice",
   description: "PERN Stack Developer Portfolio",
@@ -20,7 +35,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${manrope.variable} ${bitcount.variable}`}>
+    <html
+      lang="en"
+      className={`${manrope.variable} ${bitcount.variable} ${spaceGrotesk.variable}`}
+    >
       <body
         style={{
           margin: 0,
@@ -32,6 +50,8 @@ export default function RootLayout({ children }) {
           overflowX: "hidden",
         }}
       >
+        <Intro />
+        <Cursor />
         {children}
       </body>
     </html>

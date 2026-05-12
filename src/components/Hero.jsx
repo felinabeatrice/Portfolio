@@ -1,8 +1,13 @@
 "use client";
 import { TypeAnimation } from "react-type-animation";
 import ColorBends from "./ColorBends";
+import useBreakpoint from "@/hooks/useBreakpoint";
 
 export default function Hero() {
+  const breakpoint = useBreakpoint();
+  const isMobile = breakpoint === "mobile";
+  const isTablet = breakpoint === "tablet";
+
   return (
     <section
       id="intro"
@@ -12,7 +17,11 @@ export default function Hero() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "0 80px",
+        padding: isMobile
+          ? "100px 24px 60px"
+          : isTablet
+          ? "100px 40px 60px"
+          : "0 80px",
         background: "#271a38",
         position: "relative",
         overflow: "hidden",
@@ -21,7 +30,7 @@ export default function Hero() {
         textAlign: "center",
       }}
     >
-      {/* ColorBends Animation Background */}
+      {/* ColorBends Background */}
       <div
         style={{
           position: "absolute",
@@ -48,7 +57,7 @@ export default function Hero() {
         />
       </div>
 
-      {/* Dark Overlay */}
+      {/* Overlay */}
       <div
         style={{
           position: "absolute",
@@ -60,7 +69,7 @@ export default function Hero() {
         }}
       />
 
-      {/* Centered Content */}
+      {/* Content */}
       <div
         style={{
           display: "flex",
@@ -69,21 +78,24 @@ export default function Hero() {
           justifyContent: "center",
           textAlign: "center",
           maxWidth: "900px",
+          width: "100%",
           position: "relative",
           zIndex: 2,
         }}
       >
-        
-
         {/* Name */}
         <h1
           style={{
-            fontSize: "clamp(50px, 3vw, 80px)",
+            fontSize: isMobile
+              ? "clamp(28px, 8vw, 42px)"
+              : isTablet
+              ? "clamp(36px, 6vw, 56px)"
+              : "clamp(50px, 3vw, 80px)",
             fontWeight: 400,
-            lineHeight: 1.0,
+            lineHeight: 1.1,
             margin: "0 0 20px 0",
             color: "#76dbdb",
-            letterSpacing: "2px",
+            letterSpacing: isMobile ? "1px" : "2px",
             fontFamily: "var(--font-bitcount), monospace",
           }}
         >
@@ -93,7 +105,9 @@ export default function Hero() {
         {/* Typing */}
         <div
           style={{
-            fontSize: "clamp(20px, 2.6vw, 30px)",
+            fontSize: isMobile
+              ? "clamp(16px, 5vw, 20px)"
+              : "clamp(20px, 2.6vw, 30px)",
             fontWeight: 600,
             color: "#f75082",
             marginBottom: "28px",
@@ -119,11 +133,12 @@ export default function Hero() {
         {/* Description */}
         <p
           style={{
-            fontSize: "16px",
+            fontSize: isMobile ? "14px" : "16px",
             color: "rgba(118,219,219,0.8)",
             lineHeight: 1.9,
             maxWidth: "620px",
             marginBottom: "44px",
+            padding: isMobile ? "0 8px" : "0",
           }}
         >
           I Build scalable web experiences with a focus on{" "}
@@ -153,7 +168,7 @@ export default function Hero() {
           <a
             href="#projects"
             style={{
-              padding: "14px 32px",
+              padding: isMobile ? "12px 24px" : "14px 32px",
               background: "#f75082",
               color: "#271a38",
               borderRadius: "10px",
@@ -178,7 +193,7 @@ export default function Hero() {
           <a
             href="#contact"
             style={{
-              padding: "14px 32px",
+              padding: isMobile ? "12px 24px" : "14px 32px",
               background: "transparent",
               color: "#76dbdb",
               borderRadius: "10px",
@@ -212,6 +227,7 @@ export default function Hero() {
             marginTop: "44px",
             alignItems: "center",
             justifyContent: "center",
+            flexWrap: "wrap",
           }}
         >
           <span
@@ -252,13 +268,6 @@ export default function Hero() {
           ))}
         </div>
       </div>
-
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.3; }
-        }
-      `}</style>
     </section>
   );
 }
