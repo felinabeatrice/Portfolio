@@ -1,3 +1,4 @@
+import NoZoom from "@/components/NoZoom";
 import { Manrope, Bitcount_Single, Space_Grotesk } from "next/font/google";
 import Cursor from "@/components/Cursor";
 import Intro from "@/components/Intro";
@@ -21,16 +22,16 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
+export const metadata = {
+  title: "FB | Felina Beatrice",
+  description: "PERN Stack Developer Portfolio",
+};
+
 export const viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-};
-
-export const metadata = {
-  title: "FB | Felina Beatrice",
-  description: "PERN Stack Developer Portfolio",
 };
 
 export default function RootLayout({ children }) {
@@ -39,7 +40,7 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${manrope.variable} ${bitcount.variable} ${spaceGrotesk.variable}`}
     >
-      <body
+            <body
         style={{
           margin: 0,
           padding: 0,
@@ -50,6 +51,7 @@ export default function RootLayout({ children }) {
           overflowX: "hidden",
         }}
       >
+        <NoZoom />
         <Intro />
         <Cursor />
         {children}

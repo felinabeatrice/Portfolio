@@ -7,7 +7,7 @@ import useBreakpoint from "@/hooks/useBreakpoint";
 const GRID_SIZE = 20;
 const CELL_SIZE = 20;
 const CANVAS_SIZE = GRID_SIZE * CELL_SIZE;
-const INITIAL_SPEED = 150;
+const INITIAL_SPEED = 140;
 const SPEED_INCREMENT = 2;
 const MIN_SWIPE = 30;
 
@@ -78,7 +78,6 @@ function getRecentScores(scores, count = 5) {
 
 function findPathBFS(start, target, snake, gridSize) {
   const key = (x, y) => `${x},${y}`;
-
   const snakeSet = new Set(snake.map((s) => key(s.x, s.y)));
   snakeSet.delete(key(snake[snake.length - 1].x, snake[snake.length - 1].y));
 
@@ -117,26 +116,20 @@ function findPathBFS(start, target, snake, gridSize) {
   }
   return null;
 }
+
 function simulatePath(snake, food, path) {
   const simSnake = snake.map((seg) => ({ ...seg }));
   let ateFood = false;
-
   for (const dir of path) {
     const head = simSnake[0];
-    const newHead = {
-      x: head.x + dir.x,
-      y: head.y + dir.y,
-    };
-
+    const newHead = { x: head.x + dir.x, y: head.y + dir.y };
     simSnake.unshift(newHead);
-
     if (!ateFood && newHead.x === food.x && newHead.y === food.y) {
       ateFood = true;
     } else {
       simSnake.pop();
     }
   }
-
   return simSnake;
 }
 
@@ -159,12 +152,10 @@ function getReachableSpace(start, snake, gridSize) {
   while (stack.length > 0) {
     const current = stack.pop();
     count++;
-
     for (const dir of dirs) {
       const nx = current.x + dir.x;
       const ny = current.y + dir.y;
       const nk = key(nx, ny);
-
       if (
         nx >= 0 &&
         nx < gridSize &&
@@ -178,9 +169,16 @@ function getReachableSpace(start, snake, gridSize) {
       }
     }
   }
-
   return count;
 }
+
+// --- Scanner Auto-Pilot ---
+// Pattern:
+// col 0 = return lane (always UP, except at (0,0) go RIGHT)
+// even rows = go RIGHT, at right wall go DOWN
+// odd rows  = go LEFT, at col 1 go DOWN
+// bottom row = go LEFT into col 0
+
 function getAutoPilotDirection(snake, food, currentDir, gridSize) {
   const head = snake[0];
   const x = head.x;
@@ -189,10 +187,10 @@ function getAutoPilotDirection(snake, food, currentDir, gridSize) {
   const lastCol = gridSize - 1;
   const lastRow = gridSize - 1;
 
-  // 1) Reserved return lane: column 0 always goes UP
+  // 1) Return lane: column 0 always goes UP
   if (x === 0) {
     if (y === 0) {
-      return { x: 1, y: 0 }; // top-left starts scanning right
+      return { x: 1, y: 0 }; // top-left: start scanning right
     }
     return { x: 0, y: -1 }; // go up the return lane
   }
@@ -202,7 +200,7 @@ function getAutoPilotDirection(snake, food, currentDir, gridSize) {
     return { x: -1, y: 0 };
   }
 
-  // 3) Even rows: move RIGHT, then go DOWN at right wall
+  // 3) Even rows: move RIGHT, go DOWN at right wall
   if (y % 2 === 0) {
     if (x === lastCol) {
       return { x: 0, y: 1 };
@@ -210,13 +208,14 @@ function getAutoPilotDirection(snake, food, currentDir, gridSize) {
     return { x: 1, y: 0 };
   }
 
-  // 4) Odd rows: move LEFT, but at column 1 go DOWN
+  // 4) Odd rows: move LEFT, go DOWN at column 1
   if (x === 1) {
     return { x: 0, y: 1 };
   }
 
   return { x: -1, y: 0 };
 }
+
 // --- Main Component ---
 
 export default function GamePage() {
@@ -236,7 +235,7 @@ export default function GamePage() {
   const isTablet = breakpoint === "tablet";
   const isSmall = isMobile || isTablet;
 
-  const snakeRef = useRef([{ x: 10, y: 10 }]);
+  const snakeRef = useRef([{ x: 0, y: 0 }]);
   const dirRef = useRef({ x: 1, y: 0 });
   const nextDirRef = useRef({ x: 1, y: 0 });
   const foodRef = useRef({ x: 15, y: 10 });
@@ -274,6 +273,7 @@ export default function GamePage() {
     ctx.fillStyle = "#1a0f28";
     ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
+    // Grid dots
     ctx.fillStyle = "rgba(118,219,219,0.06)";
     for (let x = 0; x < GRID_SIZE; x++) {
       for (let y = 0; y < GRID_SIZE; y++) {
@@ -286,12 +286,14 @@ export default function GamePage() {
       }
     }
 
+    // Border
     ctx.fillStyle = "rgba(118,219,219,0.25)";
     ctx.fillRect(0, 0, CANVAS_SIZE, 2);
     ctx.fillRect(0, CANVAS_SIZE - 2, CANVAS_SIZE, 2);
     ctx.fillRect(0, 0, 2, CANVAS_SIZE);
     ctx.fillRect(CANVAS_SIZE - 2, 0, 2, CANVAS_SIZE);
 
+    // Food
     const food = foodRef.current;
     ctx.fillStyle = "#f75082";
     ctx.shadowColor = "#f75082";
@@ -304,6 +306,7 @@ export default function GamePage() {
     );
     ctx.shadowBlur = 0;
 
+    // Snake
     const snake = snakeRef.current;
     const isAuto = autoPilotRef.current;
     snake.forEach((seg, i) => {
@@ -363,6 +366,7 @@ export default function GamePage() {
     const head = snake[0];
     const newHead = { x: head.x + dir.x, y: head.y + dir.y };
 
+    // Wall collision
     if (
       newHead.x < 0 ||
       newHead.x >= GRID_SIZE ||
@@ -373,10 +377,12 @@ export default function GamePage() {
       return;
     }
 
-  if (snake.some((seg) => seg.x === newHead.x && seg.y === newHead.y)) {
-  handleGameOver();
-  return;
-}
+    // Self collision
+    if (snake.some((seg) => seg.x === newHead.x && seg.y === newHead.y)) {
+      handleGameOver();
+      return;
+    }
+
     const newSnake = [newHead, ...snake];
 
     if (newHead.x === foodRef.current.x && newHead.y === foodRef.current.y) {
@@ -399,10 +405,11 @@ export default function GamePage() {
 
   // --- Start ---
   const startGame = useCallback(() => {
+    // Start at top-left so scanner loop works correctly
     snakeRef.current = [{ x: 0, y: 0 }];
-dirRef.current = { x: 1, y: 0 };
-nextDirRef.current = { x: 1, y: 0 };
-foodRef.current = getRandomFood([{ x: 0, y: 0 }]);
+    dirRef.current = { x: 1, y: 0 };
+    nextDirRef.current = { x: 1, y: 0 };
+    foodRef.current = getRandomFood([{ x: 0, y: 0 }]);
     scoreRef.current = 0;
     speedRef.current = INITIAL_SPEED;
     pausedRef.current = false;
@@ -540,7 +547,7 @@ foodRef.current = getRandomFood([{ x: 0, y: 0 }]);
     };
   }, [gameState, startGame]);
 
-  // Prevent scroll
+  // Prevent scroll on canvas
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -549,7 +556,44 @@ foodRef.current = getRandomFood([{ x: 0, y: 0 }]);
     return () => canvas.removeEventListener("touchmove", prevent);
   }, []);
 
-  // Cleanup
+  // Prevent desktop zoom (Ctrl+scroll, trackpad pinch)
+    // Prevent ALL zoom (Ctrl+scroll, trackpad pinch, Ctrl+/-, Ctrl+0)
+  useEffect(() => {
+    const preventZoomKeys = (e) => {
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        (e.key === "+" || e.key === "-" || e.key === "=" || e.key === "0")
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    const preventZoomWheel = (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+      }
+    };
+
+    const preventGestureZoom = (e) => {
+      e.preventDefault();
+    };
+
+    window.addEventListener("keydown", preventZoomKeys, { passive: false });
+    window.addEventListener("wheel", preventZoomWheel, { passive: false });
+    window.addEventListener("gesturestart", preventGestureZoom, { passive: false });
+    window.addEventListener("gesturechange", preventGestureZoom, { passive: false });
+    window.addEventListener("gestureend", preventGestureZoom, { passive: false });
+
+    return () => {
+      window.removeEventListener("keydown", preventZoomKeys);
+      window.removeEventListener("wheel", preventZoomWheel);
+      window.removeEventListener("gesturestart", preventGestureZoom);
+      window.removeEventListener("gesturechange", preventGestureZoom);
+      window.removeEventListener("gestureend", preventGestureZoom);
+    };
+  }, []);
+
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (loopRef.current) clearInterval(loopRef.current);
@@ -684,7 +728,10 @@ foodRef.current = getRandomFood([{ x: 0, y: 0 }]);
           {recentScores.map((entry, i) => {
             const isBest = entry.score === allTimeBest && entry.score > 0;
             const date = new Date(entry.timestamp);
-            const timeStr = `${date.getHours().toString().padStart(2, "0")}:${date
+            const timeStr = `${date
+              .getHours()
+              .toString()
+              .padStart(2, "0")}:${date
               .getMinutes()
               .toString()
               .padStart(2, "0")}`;
@@ -706,11 +753,7 @@ foodRef.current = getRandomFood([{ x: 0, y: 0 }]);
                 }}
               >
                 <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                  }}
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
                 >
                   <span
                     style={{
@@ -895,7 +938,9 @@ foodRef.current = getRandomFood([{ x: 0, y: 0 }]);
           {(gameState === "playing" || gameState === "paused") && (
             <button
               onClick={togglePause}
-              aria-label={gameState === "paused" ? "Resume game" : "Pause game"}
+              aria-label={
+                gameState === "paused" ? "Resume game" : "Pause game"
+              }
               style={{
                 width: "40px",
                 height: "40px",

@@ -1,0 +1,13 @@
+html, body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overscroll-behavior: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  touch-action: manipulation;
+}
