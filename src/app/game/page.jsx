@@ -183,46 +183,39 @@ function getReachableSpace(start, snake, gridSize) {
 }
 function getAutoPilotDirection(snake, food, currentDir, gridSize) {
   const head = snake[0];
-  const { x, y } = head;
+  const x = head.x;
+  const y = head.y;
 
   const lastCol = gridSize - 1;
   const lastRow = gridSize - 1;
 
-  // === RETURN LANE — column 0, go DOWN ===
+  // 1) Reserved return lane: column 0 always goes UP
   if (x === 0) {
-    // At bottom-left, go right to start scanning
-    if (y === lastRow) {
-      return { x: 1, y: 0 };
+    if (y === 0) {
+      return { x: 1, y: 0 }; // top-left starts scanning right
     }
-    // Otherwise keep going down
-    return { x: 0, y: 1 };
+    return { x: 0, y: -1 }; // go up the return lane
   }
 
-  // === SCANNING ROWS ===
-
-  // Odd rows (1, 3, 5...) — go RIGHT
-  if (y % 2 === 1) {
-    if (x < lastCol) {
-      return { x: 1, y: 0 };
-    }
-    // At right edge, go down to next row
-    return { x: 0, y: 1 };
+  // 2) Bottom row: always move LEFT until entering column 0
+  if (y === lastRow) {
+    return { x: -1, y: 0 };
   }
 
-  // Even rows (0, 2, 4...) — go LEFT
+  // 3) Even rows: move RIGHT, then go DOWN at right wall
   if (y % 2 === 0) {
-    if (x > 1) {
-      return { x: -1, y: 0 };
+    if (x === lastCol) {
+      return { x: 0, y: 1 };
     }
-    // At column 1, go down to next row
-    // UNLESS at last row — enter return lane
-    if (y === lastRow) {
-      return { x: -1, y: 0 }; // enter column 0
-    }
+    return { x: 1, y: 0 };
+  }
+
+  // 4) Odd rows: move LEFT, but at column 1 go DOWN
+  if (x === 1) {
     return { x: 0, y: 1 };
   }
 
-  return currentDir;
+  return { x: -1, y: 0 };
 }
 // --- Main Component ---
 
@@ -406,10 +399,10 @@ export default function GamePage() {
 
   // --- Start ---
   const startGame = useCallback(() => {
-    snakeRef.current = [{ x: 10, y: 10 }];
-    dirRef.current = { x: 1, y: 0 };
-    nextDirRef.current = { x: 1, y: 0 };
-    foodRef.current = getRandomFood([{ x: 10, y: 10 }]);
+    snakeRef.current = [{ x: 0, y: 0 }];
+dirRef.current = { x: 1, y: 0 };
+nextDirRef.current = { x: 1, y: 0 };
+foodRef.current = getRandomFood([{ x: 0, y: 0 }]);
     scoreRef.current = 0;
     speedRef.current = INITIAL_SPEED;
     pausedRef.current = false;

@@ -302,7 +302,7 @@ export default function About() {
                   }}
                 />
                 <img
-  src="/profile.jpeg"
+  src="/profile.png"
   alt="Felina Beatrice"
   style={{
     width: "100%",
