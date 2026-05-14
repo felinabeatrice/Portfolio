@@ -66,7 +66,7 @@ export default function About() {
       >
         {/* LEFT — Text */}
         <div style={{ flex: 1, width: "100%" }}>
-          <SectionHeader label="Who I Am" title="About Me" align="left" />
+          <SectionHeader title="About Me" align="left" />
 
           {[
             "I'm a Full Stack Developer passionate about building fast, scalable, and user-friendly web applications.",
@@ -301,30 +301,20 @@ export default function About() {
                     filter: "blur(30px)",
                   }}
                 />
-                <span
-                  style={{
-                    fontSize: isMobile ? "24px" : "40px",
-                    position: "relative",
-                    zIndex: 1,
-                  }}
-                >
-                  📷
-                </span>
-                <span
-                  style={{
-                    fontSize: isMobile ? "9px" : "11px",
-                    color: "rgba(118,219,219,0.6)",
-                    letterSpacing: "2px",
-                    textTransform: "uppercase",
-                    position: "relative",
-                    zIndex: 1,
-                    fontWeight: 700,
-                    textAlign: "center",
-                    padding: "0 12px",
-                  }}
-                >
-                  Photo Coming Soon
-                </span>
+                <img
+  src="/profile.jpeg"
+  alt="Felina Beatrice"
+  style={{
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    objectPosition: "center 40%",
+    borderRadius: "50%",
+    position: "absolute",
+    inset: 0,
+    zIndex: 1,
+  }}
+/>
               </div>
             </div>
           </div>

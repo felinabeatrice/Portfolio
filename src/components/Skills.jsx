@@ -70,7 +70,6 @@ export default function Skills() {
         }}
       >
         <SectionHeader
-          label="What I Know"
           title="My Skills"
           subtext="Click a category to filter the technologies I use."
           align="center"

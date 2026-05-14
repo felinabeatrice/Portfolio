@@ -144,7 +144,6 @@ export default function Projects() {
         }}
       >
         <SectionHeader
-          label="What I've Built"
           title="My Projects"
           subtext="Hover a project to reveal the details."
           align="center"

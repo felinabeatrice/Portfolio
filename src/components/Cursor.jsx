@@ -8,6 +8,7 @@ export default function Cursor() {
   const pathname = usePathname();
   const [isHovering, setIsHovering] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
 
   const isGamePage = pathname === "/game";
 
@@ -20,6 +21,14 @@ export default function Cursor() {
     const onMouseMove = (e) => {
       cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
       if (!visible) setVisible(true);
+
+      // Check if hovering over a text input
+      const tag = e.target.tagName?.toLowerCase();
+      const isEditable =
+        tag === "input" ||
+        tag === "textarea" ||
+        e.target.isContentEditable;
+      setIsTyping(isEditable);
     };
 
     const onMouseLeave = () => setVisible(false);
@@ -46,7 +55,7 @@ export default function Cursor() {
       document.removeEventListener("mouseleave", onMouseLeave);
       document.removeEventListener("mouseenter", onMouseEnter);
     };
-  }, [isGamePage, pathname]);
+  }, [isGamePage, pathname, visible]);
 
   if (isGamePage) return null;
 
@@ -68,7 +77,13 @@ export default function Cursor() {
 
   return (
     <>
-      <style>{`* { cursor: none !important; }`}</style>
+      <style>{`
+        * { cursor: none !important; }
+        input, textarea, [contenteditable="true"] {
+          cursor: text !important;
+          caret-color: #76dbdb;
+        }
+      `}</style>
 
       <div
         ref={cursorRef}
@@ -78,7 +93,7 @@ export default function Cursor() {
           left: 0,
           pointerEvents: "none",
           zIndex: 99999,
-          opacity: visible ? 1 : 0,
+          opacity: visible && !isTyping ? 1 : 0,
           transition: `opacity 0.2s ease, filter ${transition}`,
           willChange: "transform",
           ...glowStyle,
